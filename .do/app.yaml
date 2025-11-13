@@ -1,0 +1,27 @@
+name: multi-runtime-app
+services:
+  - name: node-service
+    environment_slug: node-js
+    github:
+      repo: your-username/your-repo
+      branch: main
+      deploy_on_push: true
+    run_command: "node node-app/server.js"
+    http_port: 3000
+    routes:
+      - path: /
+    envs:
+      - key: PYTHON_PATH
+        value: /workspace/python-app/venv/bin/python
+
+  - name: python-service
+    environment_slug: python
+    github:
+      repo: your-username/your-repo
+      branch: main
+      deploy_on_push: true
+    run_command: "python3 -m http.server 8000"
+    build_command: "python3 -m venv venv && . venv/bin/activate && pip install -r python-app/requirements.txt"
+    http_port: 8000
+    routes:
+      - path: /python
